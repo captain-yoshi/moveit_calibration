@@ -61,8 +61,8 @@ public:
   class Parameter
   {
   public:
-    const enum ParameterType { Int, Float, Enum } parameter_type_;
     const std::string name_;
+    const enum ParameterType { Int, Float, Enum } parameter_type_;
     union Value
     {
       int i;

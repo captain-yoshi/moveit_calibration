@@ -64,16 +64,16 @@ protected:
 
 private:
   // Predefined dictionary map
-  std::map<std::string, cv::aruco::PREDEFINED_DICTIONARY_NAME> marker_dictionaries_;
+  std::map<std::string, cv::aruco::PredefinedDictionaryType> marker_dictionaries_;
 
   // Target intrinsic params
-  int squares_x_;                                        // Number of squares along X axis
-  int squares_y_;                                        // Number of squares along Y axis
-  int marker_size_pixels_;                               // Marker size in pixels
-  int square_size_pixels_;                               // Checkerboard square size in pixels
-  int border_size_bits_;                                 // Marker border width, in bits
-  int margin_size_pixels_;                               // Margin of white pixels around entire board
-  cv::aruco::PREDEFINED_DICTIONARY_NAME dictionary_id_;  // Marker dictionary id
+  int squares_x_;                                      // Number of squares along X axis
+  int squares_y_;                                      // Number of squares along Y axis
+  int marker_size_pixels_;                             // Marker size in pixels
+  int square_size_pixels_;                             // Checkerboard square size in pixels
+  int border_size_bits_;                               // Marker border width, in bits
+  int margin_size_pixels_;                             // Margin of white pixels around entire board
+  cv::aruco::PredefinedDictionaryType dictionary_id_;  // Marker dictionary id
 
   // Target real dimensions in meters
   double board_size_meters_;   // Printed board size, longest dimension

@@ -41,7 +41,7 @@ namespace moveit_handeye_calibration
 const std::string LOGNAME = "handeye_aruco_target";
 
 // Predefined ARUCO dictionaries in OpenCV for creating ARUCO marker board
-const std::map<std::string, cv::aruco::PREDEFINED_DICTIONARY_NAME> ARUCO_DICTIONARY = {
+const std::map<std::string, cv::aruco::PredefinedDictionaryType> ARUCO_DICTIONARY = {
   { "DICT_4X4_250", cv::aruco::DICT_4X4_250 },
   { "DICT_5X5_250", cv::aruco::DICT_5X5_250 },
   { "DICT_6X6_250", cv::aruco::DICT_6X6_250 },
@@ -150,12 +150,13 @@ bool HandEyeArucoTarget::createTargetImage(cv::Mat& image) const
   try
   {
     // Create target
-    cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(dictionary_id_);
-    cv::Ptr<cv::aruco::GridBoard> board =
-        cv::aruco::GridBoard::create(markers_x_, markers_y_, float(marker_size_), float(separation_), dictionary);
+    cv::Ptr<cv::aruco::Dictionary> dictionary =
+        std::make_shared<cv::aruco::Dictionary>(cv::aruco::getPredefinedDictionary(dictionary_id_));
+    cv::Ptr<cv::aruco::GridBoard> board = std::make_shared<cv::aruco::GridBoard>(
+        cv::aruco::GridBoard(cv::Size(markers_x_, markers_y_), float(marker_size_), float(separation_), *dictionary));
 
     // Create target image
-    board->draw(image_size, image, separation_, border_bits_);
+    board->generateImage(image_size, image, separation_, border_bits_);
   }
   catch (const cv::Exception& e)
   {
@@ -173,9 +174,10 @@ bool HandEyeArucoTarget::detectTargetPose(cv::Mat& image)
   {
     // Detect aruco board
     aruco_mutex_.lock();
-    cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(dictionary_id_);
-    cv::Ptr<cv::aruco::GridBoard> board =
-        cv::aruco::GridBoard::create(markers_x_, markers_y_, marker_size_real_, marker_separation_real_, dictionary);
+    cv::Ptr<cv::aruco::Dictionary> dictionary =
+        std::make_shared<cv::aruco::Dictionary>(cv::aruco::getPredefinedDictionary(dictionary_id_));
+    cv::Ptr<cv::aruco::GridBoard> board = std::make_shared<cv::aruco::GridBoard>(cv::aruco::GridBoard(
+        cv::Size(markers_x_, markers_y_), marker_size_real_, marker_separation_real_, *dictionary));
     aruco_mutex_.unlock();
     cv::Ptr<cv::aruco::DetectorParameters> params_ptr(new cv::aruco::DetectorParameters());
 #if CV_MAJOR_VERSION == 3 && CV_MINOR_VERSION == 2
